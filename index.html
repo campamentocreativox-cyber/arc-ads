@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ARC — Creative Ads Director</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#05050d;
+  --s1:#09090f;
+  --s2:#0f0f1a;
+  --s3:#151524;
+  --s4:#1c1c2e;
+  --b0:rgba(255,255,255,0.04);
+  --b1:rgba(255,255,255,0.08);
+  --b2:rgba(255,255,255,0.14);
+  --r:#ff2d55;
+  --o:#ff6b35;
+  --y:#ffd60a;
+  --g:#30d158;
+  --b:#0a84ff;
+  --p:#bf5af2;
+  --t:#fff;
+  --t2:#a0a0c0;
+  --t3:#55556a;
+  --grad:linear-gradient(135deg,#ff2d55,#ff6b35);
+  --grad2:linear-gradient(135deg,#0a84ff,#bf5af2);
+  --grad3:linear-gradient(135deg,#30d158,#0a84ff);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+
+body{
+  background:var(--bg);
+  color:var(--t);
+  font-family:'Archivo',sans-serif;
+  min-height:100vh;
+  overflow-x:hidden;
+  cursor:default;
+}
+
+/* AMBIENT GLOW */
+.glow-orb{
+  position:fixed;
+  border-radius:50%;
+  filter:blur(120px);
+  pointer-events:none;
+  z-index:0;
+  animation:drift 12s ease-in-out infinite alternate;
+}
+.glow-orb.a{width:500px;height:500px;background:rgba(255,45,85,0.08);top:-100px;left:-100px;}
+.glow-orb.b{width:400px;height:400px;background:rgba(10,132,255,0.06);bottom:-80px;right:-80px;animation-delay:-6s;}
+.glow-orb.c{width:300px;height:300px;background:rgba(191,90,242,0.05);top:40%;left:60%;animation-delay:-3s;}
+@keyframes drift{0%{transform:translate(0,0)}100%{transform:translate(30px,20px)}}
+
+/* SCANLINES */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.03) 2px,rgba(0,0,0,0.03) 4px);
+  pointer-events:none;
+  z-index:0;
+}
+
+.wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 24px 100px;}
+
+/* ─── HEADER ─── */
+header{
+  padding:52px 0 44px;
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:20px;
+  border-bottom:1px solid var(--b0);
+  margin-bottom:48px;
+}
+
+.brand{display:flex;align-items:center;gap:16px;}
+
+.brand-icon{
+  position:relative;
+  width:52px;height:52px;flex-shrink:0;
+}
+.brand-icon-bg{
+  width:52px;height:52px;
+  background:var(--grad);
+  border-radius:14px;
+  display:flex;align-items:center;justify-content:center;
+}
+.brand-icon-bg span{
+  font-family:'Archivo Black',sans-serif;
+  font-size:15px;
+  letter-spacing:2px;
+  color:#fff;
+}
+.brand-icon::after{
+  content:'';
+  position:absolute;
+  inset:-2px;
+  background:var(--grad);
+  border-radius:16px;
+  z-index:-1;
+  filter:blur(10px);
+  opacity:0.5;
+}
+
+.brand-info h1{
+  font-family:'Archivo Black',sans-serif;
+  font-size:22px;
+  letter-spacing:0.5px;
+  line-height:1;
+  background:var(--grad);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.brand-info p{
+  font-size:12px;
+  color:var(--t3);
+  margin-top:5px;
+  letter-spacing:0.3px;
+}
+
+.status-row{display:flex;flex-direction:column;gap:8px;align-items:flex-end;}
+
+.model-pill{
+  display:flex;align-items:center;gap:8px;
+  background:var(--s2);
+  border:1px solid var(--b1);
+  border-radius:20px;
+  padding:6px 14px;
+  font-size:11px;
+  color:var(--t2);
+  white-space:nowrap;
+  letter-spacing:0.3px;
+}
+.live-dot{
+  width:6px;height:6px;
+  border-radius:50%;
+  flex-shrink:0;
+}
+.live-dot.green{background:var(--g);box-shadow:0 0 8px var(--g);animation:blink 2s infinite;}
+.live-dot.blue{background:var(--b);box-shadow:0 0 8px var(--b);animation:blink 2s infinite 0.5s;}
+.live-dot.purple{background:var(--p);box-shadow:0 0 8px var(--p);animation:blink 2s infinite 1s;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.4}}
+
+/* ─── STEP LABEL ─── */
+.step-label{
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--t3);
+  margin-bottom:12px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+.step-label .num{
+  width:20px;height:20px;
+  border-radius:50%;
+  background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+  font-size:9px;
+  font-weight:700;
+  color:#fff;
+  flex-shrink:0;
+}
+.step-label::after{content:'';flex:1;height:1px;background:var(--b0);}
+
+/* ─── SECTION ─── */
+.section{margin-bottom:32px;}
+
+/* ─── URL INPUT ─── */
+.url-row{display:flex;gap:10px;}
+
+.url-inp{
+  flex:1;
+  background:var(--s2);
+  border:1px solid var(--b1);
+  border-radius:12px;
+  padding:16px 20px;
+  color:var(--t);
+  font-family:'Archivo',sans-serif;
+  font-size:14px;
+  outline:none;
+  transition:border-color 0.2s,box-shadow 0.2s;
+  letter-spacing:0.2px;
+}
+.url-inp:focus{border-color:rgba(255,45,85,0.5);box-shadow:0 0 0 3px rgba(255,45,85,0.08);}
+.url-inp::placeholder{color:var(--t3);}
+
+.btn-scan{
+  background:var(--s2);
+  border:1px solid var(--b2);
+  border-radius:12px;
+  padding:16px 22px;
+  color:var(--t);
+  font-family:'Archivo',sans-serif;
+  font-size:13px;
+  font-weight:500;
+  cursor:pointer;
+  white-space:nowrap;
+  transition:all 0.2s;
+  letter-spacing:0.3px;
+}
+.btn-scan:hover{border-color:var(--r);color:var(--r);}
+.btn-scan:disabled{opacity:0.3;cursor:not-allowed;}
+
+/* ─── TIPOS GRID ─── */
+.tipos-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:8px;
+}
+
+.tipo{
+  background:var(--s2);
+  border:1px solid var(--b0);
+  border-radius:12px;
+  padding:14px 8px 12px;
+  text-align:center;
+  cursor:pointer;
+  transition:all 0.18s;
+  user-select:none;
+  position:relative;
+  overflow:hidden;
+}
+.tipo::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:var(--grad);
+  opacity:0;
+  transition:opacity 0.18s;
+}
+.tipo:hover{border-color:var(--b2);transform:translateY(-2px);}
+.tipo.on{border-color:rgba(255,45,85,0.5);}
+.tipo.on::before{opacity:0.08;}
+
+.tipo-ico{font-size:20px;display:block;margin-bottom:6px;position:relative;}
+.tipo-lbl{
+  font-size:10px;
+  font-weight:500;
+  color:var(--t3);
+  position:relative;
+  line-height:1.3;
+  letter-spacing:0.2px;
+}
+.tipo.on .tipo-lbl{color:var(--r);}
+
+/* ─── MODELO SELECTOR ─── */
+.modelos-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+}
+
+.modelo-card{
+  background:var(--s2);
+  border:1px solid var(--b0);
+  border-radius:12px;
+  padding:14px 16px;
+  cursor:pointer;
+  transition:all 0.18s;
+  user-select:none;
+  position:relative;
+  overflow:hidden;
+}
+.modelo-card::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  opacity:0;
+  transition:opacity 0.18s;
+}
+.modelo-card:hover{border-color:var(--b2);transform:translateY(-1px);}
+
+/* model-specific colors */
+.modelo-card[data-m="MJ"]::before{background:linear-gradient(135deg,#30d158,#0a84ff);}
+.modelo-card[data-m="FLUX"]::before{background:linear-gradient(135deg,#ff6b35,#ffd60a);}
+.modelo-card[data-m="DALLE"]::before{background:linear-gradient(135deg,#0a84ff,#bf5af2);}
+.modelo-card[data-m="FIREFLY"]::before{background:linear-gradient(135deg,#ff2d55,#ff6b35);}
+.modelo-card[data-m="IDEOGRAM"]::before{background:linear-gradient(135deg,#bf5af2,#ff2d55);}
+.modelo-card[data-m="LEONARDO"]::before{background:linear-gradient(135deg,#ffd60a,#30d158);}
+
+.modelo-card[data-m="MJ"].on{border-color:rgba(48,209,88,0.5);}
+.modelo-card[data-m="FLUX"].on{border-color:rgba(255,107,53,0.5);}
+.modelo-card[data-m="DALLE"].on{border-color:rgba(10,132,255,0.5);}
+.modelo-card[data-m="FIREFLY"].on{border-color:rgba(255,45,85,0.5);}
+.modelo-card[data-m="IDEOGRAM"].on{border-color:rgba(191,90,242,0.5);}
+.modelo-card[data-m="LEONARDO"].on{border-color:rgba(255,214,10,0.5);}
+.modelo-card.on::before{opacity:0.09;}
+
+.modelo-name{
+  font-family:'Archivo Black',sans-serif;
+  font-size:12px;
+  letter-spacing:0.5px;
+  color:var(--t);
+  margin-bottom:3px;
+  position:relative;
+}
+.modelo-desc{
+  font-size:10px;
+  color:var(--t3);
+  line-height:1.4;
+  position:relative;
+  letter-spacing:0.2px;
+}
+.modelo-tag{
+  display:inline-block;
+  font-size:9px;
+  font-weight:500;
+  border-radius:3px;
+  padding:2px 6px;
+  margin-top:5px;
+  position:relative;
+  letter-spacing:0.5px;
+}
+.tag-best{background:rgba(48,209,88,0.12);color:var(--g);}
+.tag-photo{background:rgba(10,132,255,0.12);color:var(--b);}
+.tag-type{background:rgba(255,214,10,0.1);color:var(--y);}
+.tag-edit{background:rgba(191,90,242,0.1);color:var(--p);}
+.tag-free{background:rgba(255,107,53,0.1);color:var(--o);}
+
+/* ─── NIVEL CHIPS ─── */
+.niveles{display:flex;gap:8px;flex-wrap:wrap;}
+
+.nivel{
+  background:var(--s2);
+  border:1px solid var(--b0);
+  border-radius:20px;
+  padding:9px 18px;
+  font-size:12px;
+  font-weight:500;
+  cursor:pointer;
+  transition:all 0.18s;
+  color:var(--t3);
+  letter-spacing:0.3px;
+}
+.nivel:hover{border-color:var(--b2);color:var(--t);}
+.nivel.on{
+  background:rgba(10,132,255,0.1);
+  border-color:rgba(10,132,255,0.4);
+  color:var(--b);
+}
+
+/* ─── PLATAFORMAS ─── */
+.plats{display:flex;gap:8px;flex-wrap:wrap;}
+
+.plat{
+  background:var(--s2);
+  border:1px solid var(--b0);
+  border-radius:8px;
+  padding:9px 16px;
+  font-size:12px;
+  font-weight:400;
+  cursor:pointer;
+  transition:all 0.18s;
+  color:var(--t3);
+  letter-spacing:0.2px;
+}
+.plat:hover{border-color:var(--b2);color:var(--t);}
+.plat.on{
+  background:rgba(48,209,88,0.08);
+  border-color:rgba(48,209,88,0.35);
+  color:var(--g);
+}
+
+/* ─── GENERATE ─── */
+.gen-wrap{margin-top:8px;position:relative;}
+
+.btn-gen{
+  width:100%;
+  border:none;
+  border-radius:14px;
+  padding:20px;
+  background:var(--grad);
+  color:#fff;
+  font-family:'Archivo Black',sans-serif;
+  font-size:16px;
+  letter-spacing:2px;
+  cursor:pointer;
+  transition:all 0.2s;
+  position:relative;
+  overflow:hidden;
+}
+.btn-gen::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  background:linear-gradient(180deg,rgba(255,255,255,0.1),transparent);
+}
+.btn-gen:hover{transform:translateY(-1px);box-shadow:0 8px 30px rgba(255,45,85,0.35);}
+.btn-gen:active{transform:scale(0.99);}
+.btn-gen:disabled{opacity:0.2;cursor:not-allowed;transform:none;box-shadow:none;}
+
+/* ─── LOADER ─── */
+.loader{display:none;margin:24px 0;}
+.loader.on{display:block;}
+.loader-msg{
+  font-size:12px;
+  color:var(--t3);
+  font-style:italic;
+  margin-bottom:12px;
+  letter-spacing:0.3px;
+}
+.loader-track{height:1px;background:var(--b0);border-radius:1px;overflow:hidden;}
+.loader-fill{
+  height:100%;
+  background:var(--grad);
+  border-radius:1px;
+  animation:scan 1.8s ease-in-out infinite;
+}
+@keyframes scan{
+  0%{width:0%;transform:translateX(0)}
+  50%{width:50%}
+  100%{width:0%;transform:translateX(900px)}
+}
+
+/* ─── ERROR ─── */
+.err{
+  display:none;
+  background:rgba(255,45,85,0.07);
+  border:1px solid rgba(255,45,85,0.2);
+  border-radius:10px;
+  padding:14px 18px;
+  font-size:13px;
+  color:var(--r);
+  margin-bottom:20px;
+}
+.err.on{display:block;}
+
+/* ─── DIVIDER ─── */
+.div{height:1px;background:var(--b0);margin:40px 0;}
+
+/* ─── RESULTS ─── */
+.results{display:none;}
+.results.on{display:block;}
+
+/* ─── PRODUCT META ─── */
+.prod-meta{
+  background:var(--s2);
+  border:1px solid var(--b1);
+  border-radius:14px;
+  padding:20px 24px;
+  margin-bottom:28px;
+  display:flex;
+  align-items:center;
+  gap:16px;
+  flex-wrap:wrap;
+}
+.prod-name{
+  font-family:'Archivo Black',sans-serif;
+  font-size:18px;
+  letter-spacing:0.3px;
+  background:var(--grad);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.meta-chip{
+  background:var(--s3);
+  border:1px solid var(--b0);
+  border-radius:20px;
+  padding:5px 12px;
+  font-size:11px;
+  color:var(--t3);
+  letter-spacing:0.2px;
+}
+.meta-chip.hot{
+  background:rgba(255,45,85,0.08);
+  border-color:rgba(255,45,85,0.2);
+  color:var(--r);
+}
+.meta-chip.cool{
+  background:rgba(10,132,255,0.08);
+  border-color:rgba(10,132,255,0.2);
+  color:var(--b);
+}
+
+/* ─── ARTE CARD ─── */
+.arte-card{
+  background:var(--s1);
+  border:1px solid var(--b1);
+  border-radius:16px;
+  overflow:hidden;
+  margin-bottom:16px;
+  animation:fadeUp 0.4s ease both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
+
+.arte-card-head{
+  padding:18px 22px;
+  border-bottom:1px solid var(--b0);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.arte-card-left{display:flex;align-items:center;gap:12px;}
+
+.arte-badge{
+  border-radius:6px;
+  padding:5px 13px;
+  font-family:'Archivo Black',sans-serif;
+  font-size:10px;
+  letter-spacing:2px;
+  color:#fff;
+  white-space:nowrap;
+}
+.arte-badge.main{background:var(--grad);}
+.arte-badge.alt{background:var(--grad2);}
+
+.arte-card-title{
+  font-size:14px;
+  font-weight:500;
+  color:var(--t);
+  letter-spacing:0.2px;
+}
+
+.modelo-used{
+  font-size:10px;
+  color:var(--t3);
+  background:var(--s3);
+  border:1px solid var(--b0);
+  border-radius:4px;
+  padding:3px 10px;
+  letter-spacing:0.5px;
+  white-space:nowrap;
+}
+
+/* ─── TABS ─── */
+.tabs{
+  display:flex;
+  gap:4px;
+  background:var(--s2);
+  border-radius:10px;
+  padding:4px;
+  margin-bottom:20px;
+}
+.tab{
+  flex:1;
+  text-align:center;
+  padding:9px 6px;
+  font-size:11px;
+  font-weight:500;
+  cursor:pointer;
+  border-radius:7px;
+  color:var(--t3);
+  transition:all 0.15s;
+  letter-spacing:0.3px;
+  white-space:nowrap;
+}
+.tab.on{
+  background:var(--s4);
+  color:var(--t);
+  border:1px solid var(--b1);
+}
+.tab-pane{display:none;}
+.tab-pane.on{display:block;}
+
+/* ─── PROMPT BLOCK ─── */
+.prompt-block{
+  background:var(--s2);
+  border:1px solid var(--b0);
+  border-radius:12px;
+  padding:18px;
+  margin-bottom:10px;
+}
+.prompt-block-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:12px;
+}
+.prompt-block-label{
+  font-size:10px;
+  font-weight:500;
+  letter-spacing:2px;
+  text-transform:uppercase;
+  color:var(--t3);
+}
+.ready-tag{
+  font-size:9px;
+  font-weight:500;
+  letter-spacing:1px;
+  padding:3px 9px;
+  border-radius:4px;
+}
+.ready-tag.mj{background:rgba(48,209,88,0.1);color:var(--g);border:1px solid rgba(48,209,88,0.2);}
+.ready-tag.flux{background:rgba(255,107,53,0.1);color:var(--o);border:1px solid rgba(255,107,53,0.2);}
+.ready-tag.dalle{background:rgba(10,132,255,0.1);color:var(--b);border:1px solid rgba(10,132,255,0.2);}
+.ready-tag.firefly{background:rgba(255,45,85,0.1);color:var(--r);border:1px solid rgba(255,45,85,0.2);}
+.ready-tag.ideogram{background:rgba(191,90,242,0.1);color:var(--p);border:1px solid rgba(191,90,242,0.2);}
+.ready-tag.leonardo{background:rgba(255,214,10,0.1);color:var(--y);border:1px solid rgba(255,214,10,0.2);}
+
+.prompt-txt{
+  font-family:'Archivo',sans-serif;
+  font-size:12.5px;
+  line-height:1.75;
+  color:#7fffaa;
+  white-space:pre-wrap;
+  word-break:break-word;
+}
+
+.copy-btn{
+  width:100%;
+  display:block;
+  margin-top:14px;
+  background:var(--s3);
+  border:1px solid var(--b1);
+  border-radius:8px;
+  padding:10px;
+  font-size:12px;
+  font-weight:500;
+  color:var(--t3);
+  cursor:pointer;
+  transition:all 0.18s;
+  text-align:center;
+  letter-spacing:0.3px;
+}
+.copy-btn:hover{color:var(--g);border-color:rgba(48,209,88,0.3);}
+.copy-btn.copied{color:var(--g);border-color:rgba(48,209,88,0.4);background:rgba(48,209,88,0.05);}
+
+/* ─── COPY FIELDS ─── */
+.copy-fields{display:flex;flex-direction:column;gap:14px;}
+.field-lbl{
+  font-family:'Archivo Black',sans-serif;
+  font-size:9px;
+  letter-spacing:2.5px;
+  text-transform:uppercase;
+  color:var(--t3);
+  margin-bottom:6px;
+}
+.field-val{
+  background:var(--s2);
+  border:1px solid var(--b0);
+  border-radius:10px;
+  padding:14px 18px;
+  font-size:13px;
+  color:var(--t);
+  line-height:1.6;
+}
+.field-val.hl{
+  font-family:'Archivo Black',sans-serif;
+  font-size:22px;
+  letter-spacing:0.3px;
+  line-height:1.2;
+  background:var(--grad);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+  border-color:rgba(255,45,85,0.15);
+}
+.field-val.cta-val{
+  color:var(--r);
+  font-weight:600;
+  font-size:15px;
+  letter-spacing:0.5px;
+}
+
+.nivel-tag{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  background:rgba(10,132,255,0.08);
+  border:1px solid rgba(10,132,255,0.2);
+  border-radius:4px;
+  padding:4px 12px;
+  font-size:11px;
+  color:var(--b);
+  font-weight:500;
+  margin-bottom:14px;
+  letter-spacing:0.3px;
+}
+
+.caption-wrap{
+  background:var(--s2);
+  border:1px solid var(--b0);
+  border-radius:10px;
+  padding:16px 18px;
+  font-size:13px;
+  color:var(--t);
+  line-height:1.9;
+  white-space:pre-wrap;
+}
+
+/* ─── NOTA ─── */
+.nota{
+  background:rgba(255,107,53,0.05);
+  border:1px solid rgba(255,107,53,0.12);
+  border-left:3px solid var(--o);
+  border-radius:0 10px 10px 0;
+  padding:14px 18px;
+  margin-top:16px;
+  font-size:12.5px;
+  color:var(--t2);
+  line-height:1.65;
+  letter-spacing:0.2px;
+}
+.nota-head{
+  font-family:'Archivo Black',sans-serif;
+  font-size:9px;
+  letter-spacing:2px;
+  color:var(--o);
+  margin-bottom:6px;
+}
+
+/* ─── SUG GRID ─── */
+.sug-section-title{
+  font-family:'Archivo Black',sans-serif;
+  font-size:10px;
+  letter-spacing:3px;
+  text-transform:uppercase;
+  color:var(--t3);
+  margin-bottom:16px;
+  margin-top:32px;
+  display:flex;align-items:center;gap:10px;
+}
+.sug-section-title::after{content:'';flex:1;height:1px;background:var(--b0);}
+
+.sug-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+.sug-card{
+  background:var(--s2);
+  border:1px solid var(--b0);
+  border-radius:14px;
+  padding:18px;
+  transition:border-color 0.18s;
+  animation:fadeUp 0.5s ease both;
+}
+.sug-card:nth-child(2){animation-delay:0.1s;}
+.sug-card:hover{border-color:var(--b2);}
+
+.sug-title{
+  font-family:'Archivo Black',sans-serif;
+  font-size:13px;
+  color:var(--b);
+  margin-bottom:6px;
+  letter-spacing:0.3px;
+}
+.sug-reason{
+  font-size:12px;
+  color:var(--t3);
+  line-height:1.55;
+  margin-bottom:14px;
+}
+.sug-prompts{display:flex;flex-direction:column;gap:8px;}
+
+.mini-prompt{
+  background:var(--s3);
+  border:1px solid var(--b0);
+  border-radius:8px;
+  padding:10px 12px;
+}
+.mini-prompt-head{
+  display:flex;align-items:center;justify-content:space-between;
+  margin-bottom:6px;
+}
+.mini-lbl{font-size:9px;letter-spacing:1.5px;color:var(--t3);}
+.mini-copy{
+  background:none;border:none;
+  font-size:10px;color:var(--t3);
+  cursor:pointer;transition:color 0.15s;
+  padding:0;letter-spacing:0.3px;
+}
+.mini-copy:hover{color:var(--g);}
+.mini-copy.done{color:var(--g);}
+.mini-txt{
+  font-size:11px;color:#7fffaa;
+  line-height:1.55;
+  word-break:break-word;
+  white-space:pre-wrap;
+}
+
+.arte-body{padding:22px;}
+
+@media(max-width:600px){
+  .tipos-grid{grid-template-columns:repeat(3,1fr);}
+  .modelos-grid{grid-template-columns:1fr 1fr;}
+  .sug-grid{grid-template-columns:1fr;}
+  .url-row{flex-direction:column;}
+  .tabs{flex-wrap:wrap;}
+}
+</style>
+</head>
+<body>
+
+<div class="glow-orb a"></div>
+<div class="glow-orb b"></div>
+<div class="glow-orb c"></div>
+
+<div class="wrap">
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <div class="brand-icon">
+        <div class="brand-icon-bg"><span>ARC</span></div>
+      </div>
+      <div class="brand-info">
+        <h1>CREATIVE ADS DIRECTOR</h1>
+        <p>Sistema de generación publicitaria · 10 tipos de arte · 6 modelos de IA</p>
+      </div>
+    </div>
+    <div class="status-row">
+      <div class="model-pill"><div class="live-dot green"></div>Midjourney v6.1</div>
+      <div class="model-pill"><div class="live-dot blue"></div>Flux 1.1 Pro</div>
+      <div class="model-pill"><div class="live-dot purple"></div>+4 modelos</div>
+    </div>
+  </header>
+
+  <!-- 01 PRODUCTO -->
+  <div class="section">
+    <div class="step-label"><span class="num">1</span>Link del Producto</div>
+    <div class="url-row">
+      <input class="url-inp" id="urlInp" type="text" placeholder="https://tienda.com/mi-producto ..."/>
+      <button class="btn-scan" id="scanBtn" onclick="scanProduct()">Escanear →</button>
+    </div>
+  </div>
+
+  <!-- 02 TIPO DE ARTE -->
+  <div class="section">
+    <div class="step-label"><span class="num">2</span>Tipo de Arte</div>
+    <div class="tipos-grid">
+      <div class="tipo on" data-t="HUMANO" onclick="pickTipo(this)"><span class="tipo-ico">👤</span><span class="tipo-lbl">Humano</span></div>
+      <div class="tipo" data-t="PRODUCTO" onclick="pickTipo(this)"><span class="tipo-ico">📦</span><span class="tipo-lbl">Producto</span></div>
+      <div class="tipo" data-t="OFERTA" onclick="pickTipo(this)"><span class="tipo-ico">🏷️</span><span class="tipo-lbl">Oferta</span></div>
+      <div class="tipo" data-t="SPLIT" onclick="pickTipo(this)"><span class="tipo-ico">⚡</span><span class="tipo-lbl">Split Screen</span></div>
+      <div class="tipo" data-t="DEMO" onclick="pickTipo(this)"><span class="tipo-ico">🎬</span><span class="tipo-lbl">Demo</span></div>
+      <div class="tipo" data-t="TESTIMONIO" onclick="pickTipo(this)"><span class="tipo-ico">💬</span><span class="tipo-lbl">Testimonio</span></div>
+      <div class="tipo" data-t="ASPIRACIONAL" onclick="pickTipo(this)"><span class="tipo-ico">🌅</span><span class="tipo-lbl">Aspiracional</span></div>
+      <div class="tipo" data-t="BENEFICIO" onclick="pickTipo(this)"><span class="tipo-ico">✅</span><span class="tipo-lbl">Beneficio</span></div>
+      <div class="tipo" data-t="EDUCATIVO" onclick="pickTipo(this)"><span class="tipo-ico">📚</span><span class="tipo-lbl">Educativo</span></div>
+      <div class="tipo" data-t="PRENSA" onclick="pickTipo(this)"><span class="tipo-ico">📰</span><span class="tipo-lbl">Prensa</span></div>
+    </div>
+  </div>
+
+  <!-- 03 MODELO -->
+  <div class="section">
+    <div class="step-label"><span class="num">3</span>Modelo de Generación</div>
+    <div class="modelos-grid">
+      <div class="modelo-card on" data-m="MJ" onclick="pickModelo(this)">
+        <div class="modelo-name">Midjourney v6.1</div>
+        <div class="modelo-desc">El mejor para hiperrealismo comercial y retratos</div>
+        <span class="modelo-tag tag-best">MEJOR CALIDAD</span>
+      </div>
+      <div class="modelo-card" data-m="FLUX" onclick="pickModelo(this)">
+        <div class="modelo-name">Flux 1.1 Pro</div>
+        <div class="modelo-desc">Ultra fotorrealista, excelente para personas y productos</div>
+        <span class="modelo-tag tag-photo">FOTORREALISMO</span>
+      </div>
+      <div class="modelo-card" data-m="DALLE" onclick="pickModelo(this)">
+        <div class="modelo-name">DALL·E 3</div>
+        <div class="modelo-desc">Ideal para educativo, prensa e infografías complejas</div>
+        <span class="modelo-tag tag-type">TIPOGRAFÍA</span>
+      </div>
+      <div class="modelo-card" data-m="FIREFLY" onclick="pickModelo(this)">
+        <div class="modelo-name">Adobe Firefly 3</div>
+        <div class="modelo-desc">Producto e-commerce sin copyright, integración CC</div>
+        <span class="modelo-tag tag-edit">SIN COPYRIGHT</span>
+      </div>
+      <div class="modelo-card" data-m="IDEOGRAM" onclick="pickModelo(this)">
+        <div class="modelo-name">Ideogram v2</div>
+        <div class="modelo-desc">El mejor en texto dentro de imágenes y oferta/promo</div>
+        <span class="modelo-tag tag-type">TEXTO EN IMAGEN</span>
+      </div>
+      <div class="modelo-card" data-m="LEONARDO" onclick="pickModelo(this)">
+        <div class="modelo-name">Leonardo AI</div>
+        <div class="modelo-desc">Estilo comercial, aspiracional y lifestyle superior</div>
+        <span class="modelo-tag tag-free">LIFESTYLE</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 04 NIVEL -->
+  <div class="section">
+    <div class="step-label"><span class="num">4</span>Nivel de Consciencia del Cliente</div>
+    <div class="niveles">
+      <div class="nivel on" data-n="INCONSCIENTE" onclick="pickNivel(this)">😴 Inconsciente</div>
+      <div class="nivel" data-n="PROBLEMA" onclick="pickNivel(this)">😣 Problema</div>
+      <div class="nivel" data-n="SOLUCION" onclick="pickNivel(this)">💡 Solución</div>
+      <div class="nivel" data-n="PRODUCTO" onclick="pickNivel(this)">🛒 Producto</div>
+      <div class="nivel" data-n="DECISION" onclick="pickNivel(this)">🔥 Decisión</div>
+      <div class="nivel" data-n="REACTIVACION" onclick="pickNivel(this)">♻️ Reactivación</div>
+    </div>
+  </div>
+
+  <!-- 05 PLATAFORMA -->
+  <div class="section">
+    <div class="step-label"><span class="num">5</span>Plataforma y Formato</div>
+    <div class="plats">
+      <div class="plat on" data-p="META_FEED" data-r="1:1" onclick="pickPlat(this)">📘 Meta Feed 1:1</div>
+      <div class="plat" data-p="STORY" data-r="9:16" onclick="pickPlat(this)">📱 Story / Reels 9:16</div>
+      <div class="plat" data-p="TIKTOK" data-r="9:16" onclick="pickPlat(this)">🎵 TikTok 9:16</div>
+      <div class="plat" data-p="GOOGLE" data-r="16:9" onclick="pickPlat(this)">🔍 Google 16:9</div>
+      <div class="plat" data-p="PINTEREST" data-r="2:3" onclick="pickPlat(this)">📌 Pinterest 2:3</div>
+      <div class="plat" data-p="LINKEDIN" data-r="1.91:1" onclick="pickPlat(this)">💼 LinkedIn 1.91:1</div>
+    </div>
+  </div>
+
+  <div class="err" id="errBox"></div>
+
+  <!-- GENERATE -->
+  <div class="gen-wrap">
+    <button class="btn-gen" id="genBtn" onclick="generate()" disabled>
+      ✦ &nbsp; GENERAR ARTE COMPLETO
+    </button>
+  </div>
+
+  <!-- LOADER -->
+  <div class="loader" id="loader">
+    <div class="loader-msg" id="loaderMsg">Procesando...</div>
+    <div class="loader-track"><div class="loader-fill"></div></div>
+  </div>
+
+  <!-- RESULTS -->
+  <div class="results" id="results">
+    <div class="div"></div>
+
+    <!-- Product meta -->
+    <div class="prod-meta" id="prodMeta"></div>
+
+    <!-- Arte principal -->
+    <div class="arte-card" id="arteMain"></div>
+
+    <!-- Sugerencias -->
+    <div class="sug-section-title">✦ &nbsp; Tipos de Arte Alternativos Recomendados</div>
+    <div class="sug-grid" id="sugGrid"></div>
+
+  </div>
+
+</div><!-- /wrap -->
+
+<script>
+// State
+let ST = { tipo:'HUMANO', modelo:'MJ', nivel:'INCONSCIENTE', plat:'META_FEED', ratio:'1:1', producto:null };
+
+// Selectors
+function pickTipo(el){ document.querySelectorAll('.tipo').forEach(x=>x.classList.remove('on')); el.classList.add('on'); ST.tipo=el.dataset.t; }
+function pickModelo(el){ document.querySelectorAll('.modelo-card').forEach(x=>x.classList.remove('on')); el.classList.add('on'); ST.modelo=el.dataset.m; }
+function pickNivel(el){ document.querySelectorAll('.nivel').forEach(x=>x.classList.remove('on')); el.classList.add('on'); ST.nivel=el.dataset.n; }
+function pickPlat(el){ document.querySelectorAll('.plat').forEach(x=>x.classList.remove('on')); el.classList.add('on'); ST.plat=el.dataset.p; ST.ratio=el.dataset.r; }
+
+// Scan product
+async function scanProduct(){
+  const url = document.getElementById('urlInp').value.trim();
+  if(!url){ showErr('Ingresa el link del producto.'); return; }
+  hideErr();
+  setLoader(true,'Escaneando el producto desde el link...');
+  document.getElementById('scanBtn').disabled=true;
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:800,
+        tools:[{type:'web_search_20250305',name:'web_search'}],
+        system:`Analista de productos para publicidad digital. Busca el producto en el URL dado. Devuelve SOLO JSON válido sin markdown:
+{"nombre":"nombre del producto","categoria":"categoría","propuestaValor":"propuesta de valor en una frase impactante","beneficios":["b1","b2","b3"],"publicoObjetivo":"descripción psicográfica del cliente ideal","colorMarca":"color principal hex o nombre","precio":"precio si disponible","keywords":["k1","k2","k3"],"tono":"tono de marca: lujo/energético/fresco/serio/divertido/natural"}`,
+        messages:[{role:'user',content:`Analiza: ${url}`}]
+      })
+    });
+    const d = await res.json();
+    const txt = d.content.map(i=>i.text||'').join('\n');
+    const m = txt.match(/\{[\s\S]*?\}/);
+    ST.producto = m ? JSON.parse(m[0]) : {nombre:'Producto',categoria:'General',propuestaValor:url,beneficios:[],publicoObjetivo:'Audiencia general',colorMarca:'',precio:'',keywords:[],tono:'profesional'};
+    document.getElementById('genBtn').disabled=false;
+  }catch(e){ showErr('No se pudo analizar. Verifica el link.'); }
+  setLoader(false);
+  document.getElementById('scanBtn').disabled=false;
+}
+
+// Generate
+async function generate(){
+  if(!ST.producto){ showErr('Primero escanea un producto.'); return; }
+  hideErr();
+  setLoader(true,'Generando prompts de alta calidad y copy creativo...');
+  document.getElementById('genBtn').disabled=true;
+  document.getElementById('results').classList.remove('on');
+
+  // Model context
+  const modeloCtx = {
+    MJ: {
+      name:'Midjourney v6.1',
+      suffix:'--ar '+ST.ratio+' --v 6.1 --q 2 --s 750 --style raw',
+      notes:'Usa descriptores de Midjourney v6: iluminación cinematográfica, referencia de cámara (Phase One IQ4/Hasselblad H6D/Leica Q3), bokeh, color grade, estilo fotográfico específico. NO uses "--" en medio del prompt. Agrega siempre el suffix al final.'
+    },
+    FLUX: {
+      name:'Flux 1.1 Pro',
+      suffix:'',
+      notes:'Flux responde muy bien a descripciones ultra-detalladas en prosa. Menciona: focal length (35mm/50mm/85mm), f-stop (f/1.4-f/8), ISO, cámara (Sony A7IV/Canon R5), RAW photo, color science, skin texture si hay personas.'
+    },
+    DALLE: {
+      name:'DALL·E 3',
+      suffix:'',
+      notes:'DALL·E 3 es excelente con texto en imagen e infografías. Usa descripciones claras en inglés. Especifica: "photorealistic", "commercial photography", "8K", colores exactos. Evita términos de Midjourney como --ar.'
+    },
+    FIREFLY: {
+      name:'Adobe Firefly 3',
+      suffix:'',
+      notes:'Firefly funciona mejor con: "commercial product photography", "studio lighting", "white background", "Adobe Stock quality". Ideal para e-commerce. Usa descriptores de iluminación de estudio precisos.'
+    },
+    IDEOGRAM: {
+      name:'Ideogram v2',
+      suffix:'',
+      notes:'Ideogram v2 es el mejor para texto en imágenes. Siempre pon el texto exacto entre comillas en el prompt. Usa "photorealistic", "commercial ad", especifica colores de fondo y tipografía si aplica.'
+    },
+    LEONARDO: {
+      name:'Leonardo AI',
+      suffix:'',
+      notes:'Leonardo AI (Phoenix model) es superior para lifestyle y aspiracional. Usa "cinematic", "editorial photography", "golden hour", "lifestyle brand campaign". Especifica el modelo Phoenix en la plataforma.'
+    }
+  };
+
+  const M = modeloCtx[ST.modelo];
+
+  const nivelCtx = {
+    INCONSCIENTE:'El cliente NO sabe que tiene el problema. Hook: dato sorprendente, estadística impactante o historia que lo haga darse cuenta. NO menciones el producto directamente al inicio.',
+    PROBLEMA:'Sabe su problema pero no conoce soluciones. Hook: empatía profunda, validar su frustración, luego mostrar el camino.',
+    SOLUCION:'Sabe que hay soluciones pero no te conoce. Hook: presenta los beneficios clave que solo tú das.',
+    PRODUCTO:'Ya te conoce pero no compró. Hook: diferenciador vs competencia, garantías, prueba social.',
+    DECISION:'Listo para comprar. Hook: urgencia real, oferta limitada, empujón final.',
+    REACTIVACION:'Cliente anterior inactivo. Hook: novedad, "te extrañamos", oferta exclusiva para él.'
+  };
+
+  const tipoCtx = {
+    HUMANO:'Persona real como protagonista absoluto. Emoción auténtica e identificación con el cliente ideal. Producto integrado de forma natural. El rostro humano genera el mayor engagement.',
+    PRODUCTO:'El producto es el héroe. Sin personas, sin distractores. Fotografía de producto de máxima calidad, iluminación perfecta, fondo que lo potencie.',
+    OFERTA:'El precio o descuento es el protagonista. Diseño bold de alto contraste. Tipografía XXL para el %, urgencia visual, FOMO. CTA muy visible.',
+    SPLIT:'Before/after o contraste entre dos estados opuestos. División visual clara. Colores que refuerzan el contraste semántico. Transforma visualmente el problema en solución.',
+    DEMO:'Paso a paso de uso. Secuencia numerada, foco en problema→proceso→resultado. Elimina la fricción de compra mostrando la solución en acción.',
+    TESTIMONIO:'Prueba social auténtica. Cliente real con nombre, foto de perfil, estrellas. Cita en texto destacado. Genera confianza inmediata.',
+    ASPIRACIONAL:'Vende el estilo de vida, no el producto. Imagen cinematográfica de alto impacto. Producto integrado sutilmente. Paleta cálida, golden hour. El cliente debe DESEAR esa vida.',
+    BENEFICIO:'Lista estructurada de 3-5 beneficios clave con iconografía. Producto como héroe visual. Responde directamente "¿qué gano yo?"',
+    EDUCATIVO:'Entrega valor informativo real. Educa para vender. Estructura de infografía con jerarquía clara: dato/pregunta→explicación→producto como solución.',
+    PRENSA:'Formato editorial de revista o periódico premium. Activa el sesgo de autoridad. Tipografía serif, columnas, look de publicación de alto nivel.'
+  };
+
+  try{
+    const res = await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({
+        model:'claude-sonnet-4-20250514',
+        max_tokens:1000,
+        system:`Eres ARC, el director creativo senior más avanzado del mundo en publicidad digital hiperrealista. Llevas 15 años creando campañas para las marcas más importantes del planeta. Eres el máximo experto en ${M.name} y sabes exactamente qué palabras y descriptores generan resultados de nivel Cannes Lions. ${M.notes} Devuelve SOLO JSON válido sin markdown ni backticks.`,
+        messages:[{role:'user',content:`Genera el arte publicitario completo:
+
+PRODUCTO: ${JSON.stringify(ST.producto)}
+TIPO DE ARTE: ${ST.tipo} — ${tipoCtx[ST.tipo]}
+MODELO: ${M.name}
+NIVEL DE CONSCIENCIA: ${ST.nivel} — ${nivelCtx[ST.nivel]}
+PLATAFORMA: ${ST.plat} | RATIO: ${ST.ratio}
+SUFFIX OBLIGATORIO: "${M.suffix}"
+
+Devuelve SOLO este JSON:
+{
+  "arte": {
+    "promptPrincipal": "prompt hiperrealista ultra-detallado en inglés para ${M.name}. Mínimo 150 palabras. Incluye: escena principal detallada, sujeto con materiales/colores/texturas exactas, iluminación precisa con modificadores (soft box 120cm / key light + fill / golden hour at 6pm / cinematic rim), ángulo de cámara exacto (eye level / low angle 15deg / overhead 90deg / dutch tilt), profundidad de campo (f/1.4 bokeh / f/8 sharp), mood y atmósfera, paleta de color de la escena, referencia de cámara y lente, estilo fotográfico (editorial commercial / fashion / lifestyle / product CGI). Termina con: ${M.suffix}",
+    "promptVariante": "prompt variante con DIFERENTE enfoque visual: diferente ángulo, diferente iluminación, diferente composición. Misma calidad. Mínimo 100 palabras. Termina con: ${M.suffix}",
+    "copy": {
+      "headline": "titular de máximo 8 palabras, impacto máximo, adaptado al nivel ${ST.nivel}",
+      "subheadline": "subtítulo de máximo 15 palabras que complementa el headline",
+      "bodyCopy": "2-3 frases de cuerpo que refuerzan el mensaje, adaptadas al nivel ${ST.nivel} y al tono de la marca",
+      "cta": "call to action de máximo 4 palabras",
+      "caption": "caption COMPLETO listo para ${ST.plat}. ESTRUCTURA: línea 1 = hook que para el scroll (máximo 8 palabras con emoji poderoso al inicio), línea en blanco, párrafo de desarrollo con empatía y beneficios, línea en blanco, prueba social o dato de credibilidad, línea en blanco, CTA con urgencia, línea en blanco, 6-8 hashtags relevantes. Usa \\n para saltos de línea. Total: mínimo 10 líneas."
+    },
+    "notaCreativa": "nota específica del director creativo: qué hace que ESTE arte funcione para ESTE producto específico, qué elemento visual es crítico no olvidar, qué error común evitar en la ejecución",
+    "modeloTip": "tip específico para sacar el máximo de ${M.name} con este tipo de arte: configuración, sampler, negative prompt si aplica, ajuste clave"
+  },
+  "sugerencias": [
+    {
+      "tipo": "TIPO_ALTERNATIVO_1 (diferente al ${ST.tipo} principal)",
+      "emoji": "emoji representativo",
+      "razon": "razón específica y concreta de por qué este tipo alternativo funcionaría excepcionalmente bien para este producto",
+      "promptMJ": "prompt completo para Midjourney v6.1 de este tipo alternativo --ar ${ST.ratio} --v 6.1 --q 2 --s 750 --style raw",
+      "promptFlux": "prompt completo para Flux 1.1 Pro de este tipo alternativo, en prosa detallada"
+    },
+    {
+      "tipo": "TIPO_ALTERNATIVO_2 (diferente al ${ST.tipo} y al tipo 1)",
+      "emoji": "emoji representativo",
+      "razon": "razón específica y concreta de por qué este tipo alternativo funcionaría excepcionalmente bien para este producto",
+      "promptMJ": "prompt completo para Midjourney v6.1 de este tipo alternativo --ar ${ST.ratio} --v 6.1 --q 2 --s 750 --style raw",
+      "promptFlux": "prompt completo para Flux 1.1 Pro de este tipo alternativo, en prosa detallada"
+    }
+  ]
+}`
+        }]
+      })
+    });
+
+    const d = await res.json();
+    const txt = d.content.map(i=>i.text||'').join('\n');
+    const clean = txt.replace(/```json|```/g,'').trim();
+    const m = clean.match(/\{[\s\S]*\}/);
+    if(m) renderResults(JSON.parse(m[0]));
+    else showErr('Error generando. Intenta de nuevo.');
+  }catch(e){ showErr('Error de conexión. Intenta de nuevo.'); }
+
+  setLoader(false);
+  document.getElementById('genBtn').disabled=false;
+}
+
+// Render
+function renderResults(data){
+  const arte = data.arte;
+  const copy = arte.copy;
+  const M = ST.modelo.toLowerCase();
+
+  const nivelLabels = {INCONSCIENTE:'😴 Inconsciente',PROBLEMA:'😣 Problema',SOLUCION:'💡 Solución',PRODUCTO:'🛒 Producto',DECISION:'🔥 Decisión',REACTIVACION:'♻️ Reactivación'};
+  const tipoLabels  = {HUMANO:'👤 HUMANO',PRODUCTO:'📦 PRODUCTO',OFERTA:'🏷️ OFERTA',SPLIT:'⚡ SPLIT SCREEN',DEMO:'🎬 DEMO',TESTIMONIO:'💬 TESTIMONIO',ASPIRACIONAL:'🌅 ASPIRACIONAL',BENEFICIO:'✅ BENEFICIO',EDUCATIVO:'📚 EDUCATIVO',PRENSA:'📰 PRENSA'};
+  const modeloNames = {MJ:'Midjourney v6.1',FLUX:'Flux 1.1 Pro',DALLE:'DALL·E 3',FIREFLY:'Adobe Firefly 3',IDEOGRAM:'Ideogram v2',LEONARDO:'Leonardo AI'};
+
+  // Product meta
+  document.getElementById('prodMeta').innerHTML = `
+    <div class="prod-name">${esc(ST.producto.nombre)}</div>
+    <span class="meta-chip">${esc(ST.producto.categoria)}</span>
+    <span class="meta-chip hot">${tipoLabels[ST.tipo]||ST.tipo}</span>
+    <span class="meta-chip cool">${nivelLabels[ST.nivel]}</span>
+    <span class="meta-chip">${modeloNames[ST.modelo]}</span>
+    <span class="meta-chip">${ST.plat.replace('_',' ')} · ${ST.ratio}</span>
+  `;
+
+  // Arte principal
+  document.getElementById('arteMain').innerHTML = `
+    <div class="arte-card-head">
+      <div class="arte-card-left">
+        <span class="arte-badge main">${tipoLabels[ST.tipo]||ST.tipo}</span>
+        <span class="arte-card-title">Arte Principal</span>
+      </div>
+      <span class="modelo-used">${modeloNames[ST.modelo]}</span>
+    </div>
+    <div class="arte-body">
+      <div class="tabs">
+        <div class="tab on" onclick="swTab(this,'tp-p')">🖼 Prompt</div>
+        <div class="tab" onclick="swTab(this,'tp-v')">🔄 Variante</div>
+        <div class="tab" onclick="swTab(this,'tp-c')">✍️ Copy</div>
+        <div class="tab" onclick="swTab(this,'tp-cap')">📱 Caption</div>
+        <div class="tab" onclick="swTab(this,'tp-tip')">💡 Tips</div>
+      </div>
+
+      <div class="tab-pane on" id="tp-p">
+        <div class="prompt-block">
+          <div class="prompt-block-head">
+            <span class="prompt-block-label">Prompt Principal</span>
+            <span class="ready-tag ${M}">${modeloNames[ST.modelo].toUpperCase()} · LISTO</span>
+          </div>
+          <div class="prompt-txt">${esc(arte.promptPrincipal)}</div>
+          <button class="copy-btn" onclick="cp(this,\`${escJ(arte.promptPrincipal)}\`)">📋 &nbsp; Copiar prompt completo</button>
+        </div>
+      </div>
+
+      <div class="tab-pane" id="tp-v">
+        <div class="prompt-block">
+          <div class="prompt-block-head">
+            <span class="prompt-block-label">Variante — Enfoque diferente</span>
+            <span class="ready-tag ${M}">${modeloNames[ST.modelo].toUpperCase()} · LISTO</span>
+          </div>
+          <div class="prompt-txt">${esc(arte.promptVariante)}</div>
+          <button class="copy-btn" onclick="cp(this,\`${escJ(arte.promptVariante)}\`)">📋 &nbsp; Copiar variante</button>
+        </div>
+      </div>
+
+      <div class="tab-pane" id="tp-c">
+        <div class="nivel-tag">${nivelLabels[ST.nivel]}</div>
+        <div class="copy-fields">
+          <div><div class="field-lbl">Headline</div><div class="field-val hl">${esc(copy.headline)}</div></div>
+          <div><div class="field-lbl">Subheadline</div><div class="field-val">${esc(copy.subheadline)}</div></div>
+          <div><div class="field-lbl">Body Copy</div><div class="field-val">${esc(copy.bodyCopy)}</div></div>
+          <div><div class="field-lbl">CTA</div><div class="field-val cta-val">${esc(copy.cta)}</div></div>
+        </div>
+      </div>
+
+      <div class="tab-pane" id="tp-cap">
+        <div class="field-lbl" style="margin-bottom:10px;">Caption completo · ${ST.plat.replace('_',' ')}</div>
+        <div class="caption-wrap">${esc(copy.caption).replace(/\\n/g,'\n')}</div>
+        <button class="copy-btn" style="margin-top:12px;" onclick="cp(this,\`${escJ(copy.caption.replace(/\\n/g,'\n'))}\`)">📋 &nbsp; Copiar caption</button>
+      </div>
+
+      <div class="tab-pane" id="tp-tip">
+        ${arte.notaCreativa ? `<div class="nota"><div class="nota-head">💡 Director Creativo</div>${esc(arte.notaCreativa)}</div>` : ''}
+        ${arte.modeloTip ? `<div class="nota" style="margin-top:12px;border-left-color:var(--b);"><div class="nota-head" style="color:var(--b);">⚙️ Tip ${modeloNames[ST.modelo]}</div>${esc(arte.modeloTip)}</div>` : ''}
+      </div>
+    </div>
+  `;
+
+  // Sugerencias
+  let sugHTML = '';
+  (data.sugerencias||[]).forEach((s,i)=>{
+    sugHTML += `
+      <div class="sug-card">
+        <div class="sug-title">${esc(s.emoji)} ${esc(s.tipo)}</div>
+        <div class="sug-reason">${esc(s.razon)}</div>
+        <div class="sug-prompts">
+          <div class="mini-prompt">
+            <div class="mini-prompt-head">
+              <span class="mini-lbl">MIDJOURNEY v6.1</span>
+              <button class="mini-copy" onclick="cpMini(this,\`${escJ(s.promptMJ||'')}\`)">📋 Copiar</button>
+            </div>
+            <div class="mini-txt">${esc(s.promptMJ||'')}</div>
+          </div>
+          <div class="mini-prompt">
+            <div class="mini-prompt-head">
+              <span class="mini-lbl">FLUX 1.1 PRO</span>
+              <button class="mini-copy" onclick="cpMini(this,\`${escJ(s.promptFlux||'')}\`)">📋 Copiar</button>
+            </div>
+            <div class="mini-txt">${esc(s.promptFlux||'')}</div>
+          </div>
+        </div>
+      </div>
+    `;
+  });
+  document.getElementById('sugGrid').innerHTML = sugHTML;
+  document.getElementById('results').classList.add('on');
+  document.getElementById('results').scrollIntoView({behavior:'smooth'});
+}
+
+function swTab(el, paneId){
+  const body = el.closest('.arte-body');
+  body.querySelectorAll('.tab').forEach(t=>t.classList.remove('on'));
+  body.querySelectorAll('.tab-pane').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  const pane = document.getElementById(paneId);
+  if(pane) pane.classList.add('on');
+}
+
+async function cp(btn, txt){
+  try{
+    await navigator.clipboard.writeText(txt);
+    const orig = btn.innerHTML;
+    btn.innerHTML = '✓ &nbsp; Copiado!';
+    btn.classList.add('copied');
+    setTimeout(()=>{btn.innerHTML=orig;btn.classList.remove('copied');},2500);
+  }catch(e){}
+}
+
+async function cpMini(btn, txt){
+  try{
+    await navigator.clipboard.writeText(txt);
+    btn.textContent='✓ Copiado';
+    btn.classList.add('done');
+    setTimeout(()=>{btn.textContent='📋 Copiar';btn.classList.remove('done');},2000);
+  }catch(e){}
+}
+
+function setLoader(on, msg=''){
+  const l=document.getElementById('loader');
+  if(on){l.classList.add('on');document.getElementById('loaderMsg').textContent=msg;}
+  else l.classList.remove('on');
+}
+function showErr(m){const e=document.getElementById('errBox');e.textContent=m;e.classList.add('on');}
+function hideErr(){document.getElementById('errBox').classList.remove('on');}
+function esc(s){if(!s)return'';return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function escJ(s){if(!s)return'';return String(s).replace(/\\/g,'\\\\').replace(/`/g,'\\`').replace(/\$/g,'\\$');}
+</script>
+</body>
+</html>
