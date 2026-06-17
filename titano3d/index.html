@@ -8,7 +8,10 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-  <script src="https://cdn.jsdelivr.net/npm/motion@11/dist/motion.js"></script>
+  <!-- Spline web component -->
+  <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.82/build/spline-viewer.js"></script>
+  <!-- Motion.js (Framer Motion vanilla) -->
+  <script src="https://cdn.jsdelivr.net/npm/motion@11.11.13/dist/motion.js"></script>
   <style>
     /* ─── RESET & BASE ─────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -331,94 +334,71 @@
     }
     .hero-stat-label { font-size: .8rem; color: var(--muted); margin-top: 2px; }
 
-    /* ─── HERO SHOWCASE ─────────────────────────────────────────────── */
-    .hero-showcase {
+    /* ─── HERO SPLINE ───────────────────────────────────────────────── */
+    .hero-spline-wrap {
       position: relative;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      grid-template-rows: auto auto auto;
-      gap: 14px;
-      padding: 12px;
-    }
-    .showcase-card {
-      position: relative;
-      border-radius: 16px;
+      width: 100%;
+      height: 520px;
+      border-radius: 24px;
       overflow: hidden;
-      background: var(--bg-card);
       border: 1px solid var(--border);
-      cursor: pointer;
-      transition: border-color .3s ease, box-shadow .3s ease;
     }
-    .showcase-card:hover {
-      border-color: var(--aqua);
-      box-shadow: var(--glow-aqua);
-    }
-    .showcase-card.featured {
-      grid-column: span 2;
-    }
-    .showcase-card img {
+    spline-viewer {
       width: 100%;
       height: 100%;
-      object-fit: contain;
-      display: block;
-      padding: 16px;
-      transition: transform .4s ease;
+      background: transparent;
     }
-    .showcase-card:hover img { transform: scale(1.06) translateY(-4px); }
+    /* Quitar el logo de Spline */
+    spline-viewer::part(logo) { display: none; }
 
-    /* Scan line effect */
-    .showcase-card::after {
+    /* Scan overlay sobre Spline (efecto 3D scanner) */
+    .spline-scan-overlay {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      border-radius: 24px;
+    }
+    .spline-scan-line {
+      position: absolute;
+      left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg,
+        transparent 0%,
+        rgba(0,245,212,.0) 10%,
+        rgba(0,245,212,.7) 50%,
+        rgba(0,245,212,.0) 90%,
+        transparent 100%);
+      box-shadow: 0 0 12px rgba(0,245,212,.4);
+      animation: spline-scan 3s linear infinite;
+    }
+    @keyframes spline-scan {
+      0%   { top: 0%; opacity: 0; }
+      5%   { opacity: 1; }
+      95%  { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+    /* Bordes neon del contenedor */
+    .hero-spline-wrap::before {
       content: '';
       position: absolute;
-      left: 0; right: 0;
-      height: 2px;
-      background: linear-gradient(90deg, transparent, var(--aqua), transparent);
-      top: -2px;
-      opacity: 0;
-      transition: opacity .3s;
-    }
-    .showcase-card:hover::after { opacity: 1; animation: scan-line 1.2s linear infinite; }
-    @keyframes scan-line {
-      from { top: 0; }
-      to { top: 100%; }
-    }
-
-    /* Print layer badge */
-    .showcase-badge {
-      position: absolute;
-      bottom: 10px; left: 10px;
-      background: rgba(8,8,16,.8);
-      border: 1px solid rgba(0,245,212,.25);
-      border-radius: 6px;
-      padding: 4px 10px;
-      font-size: .7rem;
-      font-family: 'Orbitron', sans-serif;
-      color: var(--aqua);
-      letter-spacing: .08em;
-      backdrop-filter: blur(8px);
-    }
-
-    /* Scanning overlay */
-    .scanner-line {
-      position: absolute;
-      left: 0; right: 0;
-      height: 60px;
-      background: linear-gradient(180deg,
-        transparent,
-        rgba(0,245,212,.06) 40%,
-        rgba(0,245,212,.12) 50%,
-        rgba(0,245,212,.06) 60%,
-        transparent);
+      inset: 0;
+      border-radius: 24px;
+      border: 1.5px solid transparent;
+      background: linear-gradient(135deg, rgba(0,245,212,.3), rgba(123,47,190,.3)) border-box;
+      -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: destination-out;
+      mask-composite: exclude;
       pointer-events: none;
-      top: 0;
+      z-index: 2;
     }
 
-    /* Print progress indicator */
+    /* Chip de estado de impresión */
     .hero-print-status {
       position: absolute;
-      top: -8px; right: 0;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
+      bottom: 16px; left: 16px;
+      background: rgba(8,8,16,.85);
+      border: 1px solid rgba(0,245,212,.25);
       border-radius: 10px;
       padding: 10px 14px;
       font-size: .75rem;
@@ -426,9 +406,10 @@
       color: var(--aqua);
       letter-spacing: .08em;
       z-index: 5;
+      backdrop-filter: blur(12px);
     }
     .print-bar {
-      width: 100%;
+      width: 140px;
       height: 3px;
       background: rgba(250,250,250,.08);
       border-radius: 2px;
@@ -442,6 +423,56 @@
       animation: printing 3s ease-in-out infinite;
     }
     @keyframes printing { 0%{width:0%} 70%{width:100%} 100%{width:100%} }
+
+    /* Loading placeholder mientras Spline carga */
+    .spline-loader {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      background: var(--bg-card);
+      border-radius: 24px;
+      z-index: 0;
+    }
+    .spline-loader-ring {
+      width: 56px; height: 56px;
+      border: 3px solid rgba(0,245,212,.15);
+      border-top-color: var(--aqua);
+      border-radius: 50%;
+      animation: spin .9s linear infinite;
+    }
+    .spline-loader span {
+      font-family: 'Orbitron', sans-serif;
+      font-size: .72rem;
+      letter-spacing: .15em;
+      color: var(--aqua);
+    }
+
+    /* Scan line showcase (catálogo) */
+    .showcase-badge {
+      position: absolute;
+      bottom: 10px; left: 10px;
+      background: rgba(8,8,16,.8);
+      border: 1px solid rgba(0,245,212,.25);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: .7rem;
+      font-family: 'Orbitron', sans-serif;
+      color: var(--aqua);
+      letter-spacing: .08em;
+      backdrop-filter: blur(8px);
+    }
+    .scanner-line {
+      position: absolute;
+      left: 0; right: 0;
+      height: 60px;
+      background: linear-gradient(180deg, transparent, rgba(0,245,212,.08) 50%, transparent);
+      pointer-events: none;
+      top: 0;
+    }
 
     @keyframes rotate { to { transform: rotate(360deg); } }
     @keyframes float1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
@@ -1349,49 +1380,33 @@
         </div>
       </div>
 
-      <!-- SHOWCASE PRODUCTOS -->
+      <!-- SPLINE 3D HERO -->
       <div class="hero-visual" id="hero-showcase-wrap">
-        <div class="hero-showcase">
+        <div class="hero-spline-wrap" id="spline-wrap">
 
-          <!-- Print status chip -->
+          <!-- Loader visible mientras carga Spline -->
+          <div class="spline-loader" id="spline-loader">
+            <div class="spline-loader-ring"></div>
+            <span>CARGANDO ESCENA 3D...</span>
+          </div>
+
+          <!-- ⚠️ Reemplaza esta URL con la URL de tu escena Spline -->
+          <spline-viewer
+            id="spline-scene"
+            url="https://prod.spline.design/kZDDjO5HlviUqZy9/scene.splinecode"
+            loading-anim-type="spinner-small-dark"
+            style="position:relative;z-index:1"
+          ></spline-viewer>
+
+          <!-- Scanner neon sobre la escena 3D -->
+          <div class="spline-scan-overlay">
+            <div class="spline-scan-line"></div>
+          </div>
+
+          <!-- Chip de estado -->
           <div class="hero-print-status">
             <span>🖨️ IMPRIMIENDO...</span>
             <div class="print-bar"><div class="print-bar-fill"></div></div>
-          </div>
-
-          <!-- Producto featured: Iron Man (grande) -->
-          <div class="showcase-card featured" id="sc-0" style="height:220px" onclick="openModal(2)">
-            <div class="scanner-line" id="scan-featured"></div>
-            <img src="./assets/hero-ironman.png" alt="Iron Man Chibi 3D" style="height:200px;object-fit:contain;margin:auto" />
-            <div class="showcase-badge">COLECCIONABLE · PLA</div>
-          </div>
-
-          <!-- Guante TPU -->
-          <div class="showcase-card" id="sc-1" style="height:160px" onclick="openModal(1)">
-            <div class="scanner-line" id="scan-1"></div>
-            <img src="./assets/hero-guante.png" alt="Guante TPU 3D" style="height:140px;object-fit:contain;margin:auto" />
-            <div class="showcase-badge">TPU · CUSTOM</div>
-          </div>
-
-          <!-- Capibara -->
-          <div class="showcase-card" id="sc-2" style="height:160px" onclick="openModal(5)">
-            <div class="scanner-line" id="scan-2"></div>
-            <img src="./assets/hero-capibara.png" alt="Capibara 3D" style="height:140px;object-fit:contain;margin:auto" />
-            <div class="showcase-badge">FIGURA · PLA+</div>
-          </div>
-
-          <!-- Futbolistas -->
-          <div class="showcase-card" id="sc-3" style="height:150px" onclick="openModal(4)">
-            <div class="scanner-line" id="scan-3"></div>
-            <img src="./assets/hero-futbol.png" alt="Figuras Futbolistas 3D" style="height:130px;object-fit:contain;margin:auto" />
-            <div class="showcase-badge">SPORT · CUSTOM</div>
-          </div>
-
-          <!-- Portavasos -->
-          <div class="showcase-card" id="sc-4" style="height:150px" onclick="openModal(3)">
-            <div class="scanner-line" id="scan-4"></div>
-            <img src="./assets/hero-portavasos.png" alt="Portavasos 3D" style="height:130px;object-fit:contain;margin:auto" />
-            <div class="showcase-badge">DECO · PLA</div>
           </div>
 
         </div>
@@ -2447,11 +2462,26 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 renderProducts();
 updateCartUI();
 
+// ─── SPLINE LOADER HIDE ──────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const viewer = document.getElementById('spline-scene');
+  const loader = document.getElementById('spline-loader');
+  if (viewer && loader) {
+    viewer.addEventListener('load', () => { loader.style.display = 'none'; });
+    // Fallback: ocultar loader después de 8s aunque no dispare el evento
+    setTimeout(() => { if (loader) loader.style.display = 'none'; }, 8000);
+  }
+});
+
 // ─── MOTION.JS ANIMATIONS ────────────────────────────────────────────
-// Espera a que Motion cargue del CDN
-window.addEventListener('load', () => {
-  if (typeof Motion === 'undefined') return;
-  const { animate, scroll, inView, stagger } = Motion;
+function initMotion() {
+  // Motion puede estar en window.Motion o sus funciones directas en window
+  const M = window.Motion || window;
+  const animate = M.animate;
+  const scroll  = M.scroll;
+  const inView  = M.inView;
+  const stagger = M.stagger;
+  if (!animate || !inView) return; // Motion no cargó aún
 
   // 1. PRINT PROGRESS BAR — barra superior que avanza con el scroll
   scroll(({ y }) => {
@@ -2585,6 +2615,20 @@ window.addEventListener('load', () => {
     ]},
     { duration: 2, repeat: Infinity, easing: 'ease-in-out' }
   );
+}
+
+// Intentar inicializar Motion al cargar la página
+// Reintenta hasta 3 veces con delay por si el CDN tarda
+window.addEventListener('load', () => {
+  let tries = 0;
+  const tryInit = () => {
+    if (window.Motion?.animate || window.animate) {
+      initMotion();
+    } else if (tries++ < 5) {
+      setTimeout(tryInit, 400);
+    }
+  };
+  tryInit();
 });
 </script>
 </body>
