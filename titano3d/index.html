@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/motion@11/dist/motion.js"></script>
   <style>
     /* ─── RESET & BASE ─────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -244,6 +245,18 @@
     .mobile-nav.open { display: flex; }
     .mobile-nav a { font-size: 1rem; font-weight: 500; padding: 8px 0; border-bottom: 1px solid var(--border); }
 
+    /* ─── PRINT PROGRESS BAR ────────────────────────────────────────── */
+    #print-progress {
+      position: fixed;
+      top: 0; left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--aqua), var(--violet));
+      z-index: 9999;
+      width: 0%;
+      box-shadow: 0 0 10px rgba(0,245,212,.6);
+      transition: width .1s linear;
+    }
+
     /* ─── HERO ──────────────────────────────────────────────────────── */
     #hero {
       min-height: 100vh;
@@ -269,8 +282,8 @@
       position: relative;
       z-index: 2;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 64px;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 48px;
       align-items: center;
       padding: 120px 0 80px;
     }
@@ -309,92 +322,128 @@
       line-height: 1.8;
     }
     .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 48px; }
-    .hero-stats {
-      display: flex;
-      gap: 32px;
-    }
-    .hero-stat {}
+    .hero-stats { display: flex; gap: 32px; }
     .hero-stat-num {
       font-family: 'Orbitron', sans-serif;
       font-size: 1.8rem;
       font-weight: 900;
       color: var(--aqua);
     }
-    .hero-stat-label {
-      font-size: .8rem;
-      color: var(--muted);
-      margin-top: 2px;
-    }
-    .hero-visual {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .hero-3d-box {
-      width: 400px;
-      height: 400px;
+    .hero-stat-label { font-size: .8rem; color: var(--muted); margin-top: 2px; }
+
+    /* ─── HERO SHOWCASE ─────────────────────────────────────────────── */
+    .hero-showcase {
       position: relative;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 14px;
+      padding: 12px;
     }
-    .hero-ring {
-      position: absolute;
-      border-radius: 50%;
-      border: 1.5px solid;
-      animation: rotate 8s linear infinite;
-    }
-    .hero-ring:nth-child(1) {
-      width: 360px; height: 360px;
-      border-color: rgba(0,245,212,.25);
-      animation-duration: 12s;
-    }
-    .hero-ring:nth-child(2) {
-      width: 280px; height: 280px;
-      border-color: rgba(123,47,190,.3);
-      animation-duration: 8s;
-      animation-direction: reverse;
-    }
-    .hero-ring:nth-child(3) {
-      width: 200px; height: 200px;
-      border-color: rgba(0,245,212,.2);
-      animation-duration: 6s;
-    }
-    .hero-logo-center {
-      width: 140px;
-      height: 140px;
+    .showcase-card {
+      position: relative;
+      border-radius: 16px;
+      overflow: hidden;
       background: var(--bg-card);
-      border: 1.5px solid var(--border);
-      border-radius: 24px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: relative;
-      z-index: 2;
-      box-shadow: var(--glow-violet);
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color .3s ease, box-shadow .3s ease;
     }
-    .hero-logo-center svg { width: 80px; height: 80px; }
-    @keyframes rotate { to { transform: rotate(360deg); } }
-    .hero-floating-card {
+    .showcase-card:hover {
+      border-color: var(--aqua);
+      box-shadow: var(--glow-aqua);
+    }
+    .showcase-card.featured {
+      grid-column: span 2;
+    }
+    .showcase-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+      padding: 16px;
+      transition: transform .4s ease;
+    }
+    .showcase-card:hover img { transform: scale(1.06) translateY(-4px); }
+
+    /* Scan line effect */
+    .showcase-card::after {
+      content: '';
       position: absolute;
+      left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--aqua), transparent);
+      top: -2px;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+    .showcase-card:hover::after { opacity: 1; animation: scan-line 1.2s linear infinite; }
+    @keyframes scan-line {
+      from { top: 0; }
+      to { top: 100%; }
+    }
+
+    /* Print layer badge */
+    .showcase-badge {
+      position: absolute;
+      bottom: 10px; left: 10px;
+      background: rgba(8,8,16,.8);
+      border: 1px solid rgba(0,245,212,.25);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: .7rem;
+      font-family: 'Orbitron', sans-serif;
+      color: var(--aqua);
+      letter-spacing: .08em;
+      backdrop-filter: blur(8px);
+    }
+
+    /* Scanning overlay */
+    .scanner-line {
+      position: absolute;
+      left: 0; right: 0;
+      height: 60px;
+      background: linear-gradient(180deg,
+        transparent,
+        rgba(0,245,212,.06) 40%,
+        rgba(0,245,212,.12) 50%,
+        rgba(0,245,212,.06) 60%,
+        transparent);
+      pointer-events: none;
+      top: 0;
+    }
+
+    /* Print progress indicator */
+    .hero-print-status {
+      position: absolute;
+      top: -8px; right: 0;
       background: var(--bg-card);
       border: 1px solid var(--border);
       border-radius: 10px;
       padding: 10px 14px;
-      font-size: .78rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      white-space: nowrap;
-      z-index: 3;
-      backdrop-filter: blur(10px);
+      font-size: .75rem;
+      font-family: 'Orbitron', sans-serif;
+      color: var(--aqua);
+      letter-spacing: .08em;
+      z-index: 5;
     }
-    .hero-floating-card .dot {
-      width: 8px; height: 8px;
-      border-radius: 50%;
+    .print-bar {
+      width: 100%;
+      height: 3px;
+      background: rgba(250,250,250,.08);
+      border-radius: 2px;
+      margin-top: 6px;
+      overflow: hidden;
     }
-    .card-1 { top: 20%; right: -10px; animation: float1 4s ease-in-out infinite; }
-    .card-2 { bottom: 20%; left: -10px; animation: float2 5s ease-in-out infinite; }
+    .print-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--aqua), var(--violet));
+      border-radius: 2px;
+      animation: printing 3s ease-in-out infinite;
+    }
+    @keyframes printing { 0%{width:0%} 70%{width:100%} 100%{width:100%} }
+
+    @keyframes rotate { to { transform: rotate(360deg); } }
     @keyframes float1 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
     @keyframes float2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(8px)} }
 
@@ -1264,13 +1313,18 @@
   <button class="btn btn-aqua" onclick="document.getElementById('cart-toggle-btn').click();closeMobile()">🛒 Ver carrito</button>
 </div>
 
+<!-- ═══ PRINT PROGRESS ════════════════════════════════════════════════ -->
+<div id="print-progress"></div>
+
 <!-- ═══ HERO ══════════════════════════════════════════════════════════ -->
 <section id="hero">
   <canvas id="hero-canvas"></canvas>
   <div class="hero-bg-glow"></div>
   <div class="container">
     <div class="hero-inner">
-      <div class="hero-text">
+
+      <!-- TEXTO -->
+      <div class="hero-text" id="hero-text">
         <div class="hero-tag">Impresión 3D — Lanzamiento 2026</div>
         <h1 class="hero-h1">Donde las ideas</h1>
         <span class="hero-h1-accent font-display">toman forma.</span>
@@ -1281,7 +1335,7 @@
         </div>
         <div class="hero-stats">
           <div class="hero-stat">
-            <div class="hero-stat-num">0.1mm</div>
+            <div class="hero-stat-num" data-count="0.1">0.1mm</div>
             <div class="hero-stat-label">Precisión de capa</div>
           </div>
           <div class="hero-stat">
@@ -1295,28 +1349,54 @@
         </div>
       </div>
 
-      <div class="hero-visual">
-        <div class="hero-3d-box">
-          <div class="hero-ring"></div>
-          <div class="hero-ring"></div>
-          <div class="hero-ring"></div>
-          <div class="hero-logo-center">
-            <svg viewBox="0 0 80 80" fill="none">
-              <path d="M8 20H72V32H50V64H30V32H8V20Z" fill="#00F5D4"/>
-              <path d="M40 32L50 32L50 48L40 48L40 32Z" fill="#7B2FBE"/>
-              <path d="M30 48L40 48L40 64L30 64L30 48Z" fill="#7B2FBE" opacity="0.7"/>
-            </svg>
+      <!-- SHOWCASE PRODUCTOS -->
+      <div class="hero-visual" id="hero-showcase-wrap">
+        <div class="hero-showcase">
+
+          <!-- Print status chip -->
+          <div class="hero-print-status">
+            <span>🖨️ IMPRIMIENDO...</span>
+            <div class="print-bar"><div class="print-bar-fill"></div></div>
           </div>
-          <div class="hero-floating-card card-1">
-            <div class="dot" style="background:#00F5D4"></div>
-            Capa 0.1mm · PLA
+
+          <!-- Producto featured: Iron Man (grande) -->
+          <div class="showcase-card featured" id="sc-0" style="height:220px" onclick="openModal(2)">
+            <div class="scanner-line" id="scan-featured"></div>
+            <img src="./assets/hero-ironman.png" alt="Iron Man Chibi 3D" style="height:200px;object-fit:contain;margin:auto" />
+            <div class="showcase-badge">COLECCIONABLE · PLA</div>
           </div>
-          <div class="hero-floating-card card-2">
-            <div class="dot" style="background:#7B2FBE"></div>
-            Entrega express Chile
+
+          <!-- Guante TPU -->
+          <div class="showcase-card" id="sc-1" style="height:160px" onclick="openModal(1)">
+            <div class="scanner-line" id="scan-1"></div>
+            <img src="./assets/hero-guante.png" alt="Guante TPU 3D" style="height:140px;object-fit:contain;margin:auto" />
+            <div class="showcase-badge">TPU · CUSTOM</div>
           </div>
+
+          <!-- Capibara -->
+          <div class="showcase-card" id="sc-2" style="height:160px" onclick="openModal(5)">
+            <div class="scanner-line" id="scan-2"></div>
+            <img src="./assets/hero-capibara.png" alt="Capibara 3D" style="height:140px;object-fit:contain;margin:auto" />
+            <div class="showcase-badge">FIGURA · PLA+</div>
+          </div>
+
+          <!-- Futbolistas -->
+          <div class="showcase-card" id="sc-3" style="height:150px" onclick="openModal(4)">
+            <div class="scanner-line" id="scan-3"></div>
+            <img src="./assets/hero-futbol.png" alt="Figuras Futbolistas 3D" style="height:130px;object-fit:contain;margin:auto" />
+            <div class="showcase-badge">SPORT · CUSTOM</div>
+          </div>
+
+          <!-- Portavasos -->
+          <div class="showcase-card" id="sc-4" style="height:150px" onclick="openModal(3)">
+            <div class="scanner-line" id="scan-4"></div>
+            <img src="./assets/hero-portavasos.png" alt="Portavasos 3D" style="height:130px;object-fit:contain;margin:auto" />
+            <div class="showcase-badge">DECO · PLA</div>
+          </div>
+
         </div>
       </div>
+
     </div>
   </div>
 </section>
@@ -1865,104 +1945,110 @@
 const PRODUCTS = [
   {
     id: 1,
-    name: "Figura Dragón Articulado",
-    cat: "coleccionable",
-    catLabel: "COLECCIONABLE",
+    name: "Manopla / Guante TPU Custom",
+    cat: "custom",
+    catLabel: "CUSTOM",
     catColor: "aqua",
-    emoji: "🐉",
-    desc: "Figura articulada de dragón con 14 puntos de articulación. Impresa en PLA con acabado liso y opciones de pintura manual a pedido.",
-    price: 24990,
+    emoji: "🖐️",
+    img: "./assets/hero-guante.png",
+    desc: "Guante-manopla de dorso de mano impreso en TPU flexible con orificios estratégicos para máxima ventilación. Diseño ajustado al molde de tu mano. Ideal para cosplay, deporte o moda.",
+    price: 19990,
     specs: [
-      ["Material", "PLA Premium"],
-      ["Tamaño", "18 × 12 × 8 cm"],
-      ["Peso", "~85g"],
-      ["Articulaciones", "14 puntos"],
-      ["Acabado", "Liso / Pintado (+$5.000)"],
+      ["Material", "TPU Flexible"],
+      ["Ajuste", "Medida personalizada"],
+      ["Acabado", "Liso / Texturizado"],
+      ["Plazo", "5 a 7 días hábiles"],
+      ["Uso", "Cosplay · Deporte · Moda"],
     ]
   },
   {
     id: 2,
-    name: "Busto Personalizado",
-    cat: "custom",
-    catLabel: "CUSTOM",
+    name: "Iron Man Chibi — Edición Pintada",
+    cat: "coleccionable",
+    catLabel: "COLECCIONABLE",
     catColor: "aqua",
-    emoji: "🗿",
-    desc: "Busto hiperrealista a partir de tu foto o referencia. El modelo se genera en 3D y se imprime con máxima fidelidad. Ideal como regalo único.",
-    price: 39990,
+    img: "./assets/hero-ironman.png",
+    emoji: "🤖",
+    desc: "Figura chibi de Iron Man Mark III impresa en PLA con pintado a mano multicapa. Detalle de ojos reactor azul, armadura roja y dorada. Coleccionable de exhibición con base incluida.",
+    price: 24990,
     specs: [
       ["Material", "PLA Alta Definición"],
-      ["Tamaño", "~15cm de altura"],
-      ["Plazo", "5 a 7 días hábiles"],
-      ["Acabado", "Natural o pintado"],
-      ["Archivo", "Incluye modelo 3D digital"],
+      ["Altura", "~12 cm"],
+      ["Pintado", "A mano, multicapa"],
+      ["Base", "Incluida"],
+      ["Plazo", "7 a 10 días hábiles"],
     ]
   },
   {
     id: 3,
-    name: "Set Trofeos Corporativos",
-    cat: "corporativo",
-    catLabel: "CORPORATIVO",
-    catColor: "violet",
-    emoji: "🏆",
-    desc: "Trofeos personalizados con el logo de tu empresa para eventos, premios y reconocimientos. Pedido mínimo 10 unidades. Cotización a medida.",
-    price: 8990,
-    specs: [
-      ["Material", "PETG Resistente"],
-      ["Tamaño", "20cm de altura estándar"],
-      ["Mínimo", "10 unidades"],
-      ["Plazo", "5 días hábiles"],
-      ["Acabado", "Monocromático o color"],
-    ]
-  },
-  {
-    id: 4,
-    name: "Figura Anime Custom",
-    cat: "coleccionable",
-    catLabel: "COLECCIONABLE",
+    name: "Portavasos Figura con Brazos",
+    cat: "custom",
+    catLabel: "CUSTOM",
     catColor: "aqua",
-    emoji: "⚔️",
-    desc: "Tu personaje de anime favorito impreso a escala 1:8. Enviamos el archivo STL o lo diseñamos desde tu referencia. Pintado opcional por artistas del taller.",
-    price: 32990,
+    img: "./assets/hero-portavasos.png",
+    emoji: "🥤",
+    desc: "Portavasos de escritorio en forma de personaje que 'abraza' tu lata o taza. Diseño feliz y funcional, impreso en PLA blanco mate. Compatible con latas estándar 355ml.",
+    price: 9990,
     specs: [
-      ["Material", "PLA + ABS disponible"],
-      ["Escala", "1:8 (~20cm)"],
-      ["Plazo", "7 a 10 días hábiles"],
-      ["Pintado", "Disponible (+precio según detalle)"],
-      ["Base", "Incluida"],
-    ]
-  },
-  {
-    id: 5,
-    name: "Miniaturas para Juegos",
-    cat: "coleccionable",
-    catLabel: "COLECCIONABLE",
-    catColor: "aqua",
-    emoji: "⚙️",
-    desc: "Miniaturas para juegos de mesa, wargames y rol. Alta precisión en escala 28mm o 32mm. Compatible con sistemas D&D, Warhammer y otros.",
-    price: 4990,
-    specs: [
-      ["Material", "Resina o PLA"],
-      ["Escala", "28mm / 32mm"],
-      ["Precio", "Por unidad (pack 5 unid. con descuento)"],
-      ["Acabado", "Sin pintar o pintado"],
+      ["Material", "PLA Mate"],
+      ["Compatible", "Latas 355ml · Vasos estándar"],
+      ["Color", "Blanco o a pedido"],
+      ["Tamaño", "~14 cm de altura"],
       ["Plazo", "3 a 5 días hábiles"],
     ]
   },
   {
+    id: 4,
+    name: "Figuras Futbolistas Custom",
+    cat: "coleccionable",
+    catLabel: "COLECCIONABLE",
+    catColor: "aqua",
+    img: "./assets/hero-futbol.png",
+    emoji: "⚽",
+    desc: "Pack de minifiguras de tus futbolistas favoritos: Messi, Ronaldo, Neymar y más. Con base decorativa y pintado de camiseta a color. Perfectas para colección o regalo.",
+    price: 14990,
+    specs: [
+      ["Material", "PLA + Pintado"],
+      ["Altura", "~10 cm c/u"],
+      ["Pack", "Individual o set de 3"],
+      ["Base", "Incluida con color de equipo"],
+      ["Plazo", "5 a 7 días hábiles"],
+    ]
+  },
+  {
+    id: 5,
+    name: "Capibara en Bata — Edición Mañanera",
+    cat: "coleccionable",
+    catLabel: "COLECCIONABLE",
+    catColor: "aqua",
+    img: "./assets/hero-capibara.png",
+    emoji: "🦫",
+    desc: "La capibara más icónica de internet ahora en 3D. En bata roja, pantuflas de osito y taza en mano. Pintada a mano con acabado premium. El regalo más original para tu coleccionista.",
+    price: 21990,
+    specs: [
+      ["Material", "PLA + PETG Multi-color"],
+      ["Altura", "~15 cm"],
+      ["Pintado", "A mano — detalle premium"],
+      ["Edición", "Limitada"],
+      ["Plazo", "7 a 10 días hábiles"],
+    ]
+  },
+  {
     id: 6,
-    name: "Regalo Corporativo Logo",
+    name: "Regalos Corporativos Custom",
     cat: "corporativo",
     catLabel: "CORPORATIVO",
     catColor: "violet",
-    emoji: "🎁",
-    desc: "Piezas de escritorio con el logo en relieve de tu empresa. Portacelulares, pisapapeles, figuras de marca. Packaging especial disponible.",
-    price: 6990,
+    img: "",
+    emoji: "🏢",
+    desc: "Trofeos, souvenirs y piezas de escritorio con el logo de tu empresa. Diseño 3D personalizado, acabado profesional y entrega express para eventos corporativos.",
+    price: 8990,
     specs: [
       ["Material", "PLA o PETG"],
-      ["Tamaño", "A definir con el cliente"],
-      ["Mínimo", "5 unidades"],
-      ["Branding", "Logo + colores de empresa"],
-      ["Packaging", "Caja personalizada (+$1.500 c/u)"],
+      ["Mínimo", "10 unidades"],
+      ["Branding", "Logo + colores corporativos"],
+      ["Packaging", "Caja especial disponible"],
+      ["Plazo", "5 días hábiles"],
     ]
   },
 ];
@@ -2063,10 +2149,10 @@ function renderProducts() {
   grid.innerHTML = filtered.map(p => `
     <div class="card producto-card" onclick="openModal(${p.id})">
       <div class="producto-img">
-        <div class="producto-img-placeholder">
-          <span class="p-icon">${p.emoji}</span>
-          <span>FOTO PRODUCTO</span>
-        </div>
+        ${p.img
+          ? `<img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:contain;padding:16px" />`
+          : `<div class="producto-img-placeholder"><span class="p-icon">${p.emoji}</span><span>FOTO PRODUCTO</span></div>`
+        }
         <div class="producto-overlay">
           <span style="font-size:.9rem;font-family:'Orbitron',sans-serif;color:var(--aqua);letter-spacing:.1em">VER DETALLE →</span>
         </div>
@@ -2087,6 +2173,9 @@ function renderProducts() {
         </div>
       </div>
     </div>`).join('');
+
+  // Re-apply Motion animations to new cards
+  animateProductCards();
 }
 
 document.querySelectorAll('.filter-btn').forEach(btn => {
@@ -2106,11 +2195,9 @@ function openModal(productId) {
   if (!p) return;
   currentModalProduct = p;
 
-  document.getElementById('modal-img').innerHTML = `
-    <div class="modal-img-placeholder">
-      <span class="big">${p.emoji}</span>
-      <span>FOTO PRODUCTO</span>
-    </div>`;
+  document.getElementById('modal-img').innerHTML = p.img
+    ? `<img src="${p.img}" alt="${p.name}" style="width:100%;height:100%;object-fit:contain;padding:24px" />`
+    : `<div class="modal-img-placeholder"><span class="big">${p.emoji}</span><span>FOTO PRODUCTO</span></div>`;
 
   const tagEl = document.getElementById('modal-tag');
   tagEl.textContent = p.catLabel;
@@ -2359,6 +2446,146 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 // ─── INIT ────────────────────────────────────────────────────────────
 renderProducts();
 updateCartUI();
+
+// ─── MOTION.JS ANIMATIONS ────────────────────────────────────────────
+// Espera a que Motion cargue del CDN
+window.addEventListener('load', () => {
+  if (typeof Motion === 'undefined') return;
+  const { animate, scroll, inView, stagger } = Motion;
+
+  // 1. PRINT PROGRESS BAR — barra superior que avanza con el scroll
+  scroll(({ y }) => {
+    const pct = (y.progress * 100).toFixed(1);
+    document.getElementById('print-progress').style.width = pct + '%';
+  });
+
+  // 2. HERO TEXT — entrada tipo "impresión por capas" (cada línea aparece de abajo)
+  animate(
+    '#hero-text > *',
+    { opacity: [0, 1], y: [40, 0], filter: ['blur(6px)', 'blur(0px)'] },
+    { duration: 0.7, delay: stagger(0.12), easing: [0.25, 0.1, 0.25, 1] }
+  );
+
+  // 3. HERO SHOWCASE — tarjetas aparecen como capas de impresión (bottom → top, escalonadas)
+  animate(
+    '#hero-showcase-wrap .showcase-card',
+    { opacity: [0, 1], y: [60, 0], scaleY: [0.6, 1] },
+    { duration: 0.65, delay: stagger(0.1, { start: 0.3 }), easing: [0.34, 1.56, 0.64, 1] }
+  );
+
+  // 4. SCANNER LINE en el hero — barre verticalmente las tarjetas
+  const scanTargets = document.querySelectorAll('.scanner-line');
+  scanTargets.forEach(el => {
+    animate(
+      el,
+      { top: ['-10%', '110%'] },
+      { duration: 2.5, repeat: Infinity, easing: 'linear', delay: Math.random() * 2 }
+    );
+  });
+
+  // 5. PRODUCTO CARDS — entrada tipo "materialización 3D" al entrar al viewport
+  function animateProductCards() {
+    const cards = document.querySelectorAll('.producto-card');
+    cards.forEach((card, i) => {
+      card.style.opacity = '0';
+      card.style.transform = 'translateY(40px) scale(0.94)';
+    });
+    inView('#productos-grid', () => {
+      animate(
+        '.producto-card',
+        { opacity: [0, 1], y: [40, 0], scale: [0.94, 1] },
+        { duration: 0.55, delay: stagger(0.08), easing: [0.34, 1.2, 0.64, 1] }
+      );
+    }, { amount: 0.1 });
+  }
+  animateProductCards();
+  window.animateProductCards = animateProductCards;
+
+  // 6. PROCESO STEPS — aparecen como "capas de impresión" de izquierda a derecha
+  inView('#proceso', () => {
+    animate(
+      '.proceso-step',
+      { opacity: [0, 1], x: [-30, 0], filter: ['blur(4px)', 'blur(0px)'] },
+      { duration: 0.6, delay: stagger(0.15), easing: 'ease-out' }
+    );
+    // Números de paso: efecto "extrude" (escala Z simulada)
+    animate(
+      '.proceso-num',
+      { scale: [0, 1.15, 1], opacity: [0, 1] },
+      { duration: 0.5, delay: stagger(0.15, { start: 0.1 }), easing: [0.34, 1.56, 0.64, 1] }
+    );
+  }, { amount: 0.2 });
+
+  // 7. SERVICIOS CARDS — entran como extrusión de filamento (scale Y de 0 a 1)
+  inView('#servicios', () => {
+    animate(
+      '.servicio-card',
+      { opacity: [0, 1], scaleY: [0.5, 1], y: [30, 0] },
+      { duration: 0.6, delay: stagger(0.12), easing: [0.25, 0.1, 0.25, 1] }
+    );
+  }, { amount: 0.15 });
+
+  // 8. TALLER VALUES — números "imprimen" uno a uno
+  inView('#taller', () => {
+    animate(
+      '.taller-value',
+      { opacity: [0, 1], scale: [0.8, 1], y: [20, 0] },
+      { duration: 0.5, delay: stagger(0.1), easing: [0.34, 1.4, 0.64, 1] }
+    );
+    animate(
+      '.taller-spec-item',
+      { opacity: [0, 1], x: [-20, 0] },
+      { duration: 0.4, delay: stagger(0.07, { start: 0.3 }), easing: 'ease-out' }
+    );
+  }, { amount: 0.2 });
+
+  // 9. TESTIMONIOS — aparecen en ola
+  inView('#testimonios', () => {
+    animate(
+      '.testimonio-card',
+      { opacity: [0, 1], y: [50, 0], rotate: [-2, 0] },
+      { duration: 0.55, delay: stagger(0.12), easing: [0.34, 1.2, 0.64, 1] }
+    );
+  }, { amount: 0.15 });
+
+  // 10. FAQ ITEMS — desliz desde la izquierda como líneas de código de slicer
+  inView('#faq', () => {
+    animate(
+      '.faq-item',
+      { opacity: [0, 1], x: [-24, 0] },
+      { duration: 0.45, delay: stagger(0.08), easing: 'ease-out' }
+    );
+  }, { amount: 0.1 });
+
+  // 11. COTIZADOR — entrada partida: info desde izquierda, form desde derecha
+  inView('#cotizador', () => {
+    animate('.cotizador-info', { opacity: [0, 1], x: [-40, 0] }, { duration: 0.6, easing: 'ease-out' });
+    animate('.cotizador-form', { opacity: [0, 1], x: [40, 0] }, { duration: 0.6, delay: 0.1, easing: 'ease-out' });
+  }, { amount: 0.15 });
+
+  // 12. FOOTER — fade in suave
+  inView('footer', () => {
+    animate('footer', { opacity: [0, 1], y: [20, 0] }, { duration: 0.6, easing: 'ease-out' });
+  }, { amount: 0.05 });
+
+  // 13. NAV LOGO — pulso suave en loop (como LED de impresora)
+  animate(
+    '#navbar .nav-logo svg',
+    { filter: ['drop-shadow(0 0 0px #00F5D4)', 'drop-shadow(0 0 8px #00F5D4)', 'drop-shadow(0 0 0px #00F5D4)'] },
+    { duration: 3, repeat: Infinity, easing: 'ease-in-out' }
+  );
+
+  // 14. BOTÓN WHATSAPP — pulso tipo "neon sign"
+  animate(
+    '#wsp-float .wsp-btn',
+    { boxShadow: [
+      '0 4px 20px rgba(37,211,102,.4)',
+      '0 4px 32px rgba(37,211,102,.7)',
+      '0 4px 20px rgba(37,211,102,.4)'
+    ]},
+    { duration: 2, repeat: Infinity, easing: 'ease-in-out' }
+  );
+});
 </script>
 </body>
 </html>
