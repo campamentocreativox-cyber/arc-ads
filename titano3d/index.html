@@ -285,10 +285,10 @@
       position: relative;
       z-index: 2;
       display: grid;
-      grid-template-columns: 1fr 1.1fr;
-      gap: 48px;
+      grid-template-columns: 1fr 1.4fr;
+      gap: 40px;
       align-items: center;
-      padding: 120px 0 80px;
+      padding: 100px 0 60px;
     }
     .hero-tag {
       display: inline-flex;
@@ -338,18 +338,48 @@
     .hero-spline-wrap {
       position: relative;
       width: 100%;
-      height: 520px;
+      aspect-ratio: 16 / 9;
       border-radius: 24px;
       overflow: hidden;
       border: 1px solid var(--border);
     }
-    spline-viewer {
+    .hero-spline-wrap iframe {
       width: 100%;
       height: 100%;
-      background: transparent;
+      border: none;
+      /* Aplicar filtro de color hacia la paleta de la marca */
+      filter: hue-rotate(160deg) saturate(1.25) brightness(0.9);
     }
-    /* Quitar el logo de Spline */
-    spline-viewer::part(logo) { display: none; }
+    /* Overlay para reforzar el tono aqua+violeta */
+    .spline-color-tint {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg,
+        rgba(0,245,212,.18) 0%,
+        rgba(123,47,190,.22) 100%);
+      mix-blend-mode: color;
+      pointer-events: none;
+      z-index: 3;
+      border-radius: 24px;
+    }
+    /* Tapar logo "Built with Spline" (esquina inf-derecha) */
+    .spline-hide-logo {
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 160px; height: 48px;
+      background: var(--bg-base);
+      z-index: 10;
+      border-radius: 0 0 24px 0;
+    }
+    /* Tapar botón "Get in touch" de la escena */
+    .spline-hide-btn {
+      position: absolute;
+      bottom: 0;
+      left: 50%; transform: translateX(-50%);
+      width: 220px; height: 80px;
+      background: var(--bg-base);
+      z-index: 10;
+    }
 
     /* Scan overlay sobre Spline (efecto 3D scanner) */
     .spline-scan-overlay {
@@ -1404,6 +1434,15 @@
           <div class="spline-scan-overlay">
             <div class="spline-scan-line"></div>
           </div>
+
+          <!-- Overlay tinte paleta de marca -->
+          <div class="spline-color-tint"></div>
+
+          <!-- Tapar "Built with Spline" -->
+          <div class="spline-hide-logo"></div>
+
+          <!-- Tapar "Get in touch" -->
+          <div class="spline-hide-btn"></div>
 
           <!-- Chip de estado -->
           <div class="hero-print-status">
